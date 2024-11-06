@@ -3,14 +3,28 @@ placeholders = ['NOUN', 'VERB_ING', 'ADJECTIVE']
 
 # Create a function that reads files line by line
 def read_files(filename):
-    file = open(filename, 'r')
+    try:
+        file = open(filename, 'r')
+        text = ' '
+        for line in file :
+            text = text + process_line(line)
+    
+        file.close()
+        return text
+    except FileExistsError:
+        print(f"Sorry, {filename} already exists")
+    except IsADirectoryError:
+        print(f"Sorry, {filename} is a directory")
+    except:
+        print(f"{filename} not found")
 
-    text = ''
-    for line in file:
-        text = text + process_line(line)
-
+# Create a function that re-writes the file with our text
+def write_file(filename, text):
+    file = open(filename, 'w')
+    file.write(text)
     file.close()
-    return text
+
+
 
 # Create a functions that processes each line to spot a placeholder and prompt the user
 def process_line(line):
@@ -37,8 +51,10 @@ def process_line(line):
 
 # Create a functions that calls the other functions reading a particular file
 def main():
-    file = read_files('files/lib.txt')
-    print(file)
+    filename = 'files/lib.txt'
+    lib = read_files(filename)
+    if (lib!=None):
+        write_file(filename,lib)
 
 if __name__ == '__main__':
     main()
